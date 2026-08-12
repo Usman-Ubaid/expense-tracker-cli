@@ -1,6 +1,7 @@
 import argparse;
 import csv;
 import os;
+from datetime import date
 
 CSV_FILE = "expenses.csv"
 FIELD_NAMES = ['id', 'date','description','amount','category']
@@ -13,7 +14,7 @@ def load_expenses():
         reader = csv.DictReader(f)
         return list(reader)
 
-def save_expense(expenses):
+def save_expenses(expenses):
     """Write the full list of expenses into the CSV file"""
     with open(CSV_FILE, "w", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=FIELD_NAMES)
@@ -21,8 +22,23 @@ def save_expense(expenses):
         writer.writerows(expenses)
 
 def add_expense(description, amount, category):
-    # TODO
-    pass
+    expenses = load_expenses()
+    if expenses:
+        new_id = max(int(e["id"]) for e in expense) + 1
+    else:
+        new_id = 1
+    if description and amount and category:
+        expense = {
+            "id": new_id,
+            "date": date.today().isoformat(),
+            "description": description,
+            "amount": amount,
+            "category": category
+        }
+        expenses.append(expense)
+        save_expenses(expenses)
+    else:
+        print('Some fields are missing!')
 
 def list_expense(category):
     # TODO
