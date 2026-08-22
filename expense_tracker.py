@@ -55,8 +55,25 @@ def list_expense(category=None):
     
 
 def update_expense(expense_id, description=None, amount=None, category=None):
-    # TODO
-    pass
+    expenses = load_expenses()
+    found = False
+    for e in expenses:
+        if e['id'] == expense_id:
+            found = True
+            if description:
+                e['description'] = description
+            if amount:
+                e['amount'] = amount
+            if category:
+                e['category'] = category
+
+    if found:
+        save_expenses(expenses)
+        print('expense updated')
+    else: 
+        print('No expense found for that ID.')
+        
+    
 
 def delete_expense(expense_id):
     expenses = load_expenses()
