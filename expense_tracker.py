@@ -24,7 +24,7 @@ def save_expenses(expenses):
 def add_expense(description, amount, category):
     expenses = load_expenses()
     if expenses:
-        new_id = max(int(e["id"]) for e in expense) + 1
+        new_id = max(int(e["id"]) for e in expenses) + 1
     else:
         new_id = 1
     if description and amount and category:
@@ -98,11 +98,47 @@ def main():
     parser = argparse.ArgumentParser(description="Simple Expense Tracker")
     subparsers = parser.add_subparsers(dest="command")
 
-     # TODO: define subparsers for add, list, delete, update, summary
+    # Add
+    add_parser = subparsers.add_parser('add')
+    add_parser.add_argument('--description', required=True)
+    add_parser.add_argument('--amount', required=True, type=float)
+    add_parser.add_argument('--category', required=True)
+
+    # List
+    list_parser = subparsers.add_parser('list')
+    list_parser.add_argument('--category')
+
+    # Update
+    update_parser = subparsers.add_parser('update')
+    update_parser.add_argument('--expense_id', required=True)
+    update_parser.add_argument('--description')
+    update_parser.add_argument('--amount', type=float)
+    update_parser.add_argument('--category')
+
+    # Delete
+    delete_parser = subparsers.add_parser('delete')
+    delete_parser.add_argument('--expense_id', required=True)
+
+    # Summary
+    summary_parser = subparsers.add_parser('summary')
+    summary_parser.add_argument('--month')
 
     args = parser.parse_args()
 
-    # TODO: dispatch to the right function based on args.command
+    if args.command == 'add':
+        add_expense(args.description, args.amount, args.category)
+    elif args.command == 'list':
+        list_expense(args.category)
+    elif args.command == 'update':
+        update_expense(args.expense_id, args.description, args.amount, args.category)
+    elif args.command == 'delete':
+        delete_expense(args.expense_id)
+    elif args.command == 'summary':
+        summary(args.month)
+    else: 
+        parser.print_help()
+
+    
 
 if __name__== "__main__":
     main()
