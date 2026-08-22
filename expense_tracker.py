@@ -84,8 +84,15 @@ def delete_expense(expense_id):
         print("No task found for that ID.")
 
 def summary(month=None):
-    # TODO
-    pass
+    expenses = load_expenses()
+    if month:
+        month_expenses = [e for e in expenses if e['date'][:7] == month]
+        total = sum(float(e['amount']) for e in month_expenses)
+        print(f"Total expenses: ${total:.2f}")
+    else:
+        total = sum(float(e['amount']) for e in expenses)
+        print(f"Total expenses: ${total:.2f}")
+    
 
 def main():
     parser = argparse.ArgumentParser(description="Simple Expense Tracker")
