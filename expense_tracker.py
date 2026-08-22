@@ -40,17 +40,31 @@ def add_expense(description, amount, category):
     else:
         print('Some fields are missing!')
 
-def list_expense(category):
-    # TODO
-    pass
+def list_expense(category=None):
+    expenses = load_expenses()
+    if category:
+        expenses = [e for e in expenses if e["category"] == category]
+
+    if not expenses:
+        print("No expenses found.")
+        return
+
+    print(f"{'ID':<5}{'Date':<12}{'Description':<20}{'Amount':<10}{'Category':<12}")
+    for e in expenses:
+        print(f"{e['id']:<5}{e['date']:<12}{e['description']:<20}{e['amount']:<10}{e['category']:<12}")
+    
 
 def update_expense(expense_id, description=None, amount=None, category=None):
     # TODO
     pass
 
 def delete_expense(expense_id):
-    # TODO
-    pass
+    expenses = load_expenses()
+    if expense_id in [e['id'] for e in expenses]:
+        expenses = [e for e in expenses if e['id'] != expense_id]
+        save_expenses(expenses)
+    else:
+        print("No task found for that ID.")
 
 def summary(month=None):
     # TODO
